@@ -1,12 +1,12 @@
 <%= simple_form_for @dog do |f| %>
   <%= f.input :name %>
   <%= f.input :description, as: :text %>
-<%= f.input :image, label: "Choose Images: ", as: :file, input_html: {multiple: true} %>
+  <%= f.input :image, label: "Choose Images: ", as: :file, input_html: {multiple: true} %>
 
   <% if @dog.user != nil %>
-<%= f.association :user, label: "Set Owner: ", label_method: :email, select: @dog.user.email %>
+    <%= f.association :user, label: "Set Owner: ", label_method: :email, select: @dog.user.email %>
   <% else %>
-<%= f.association :user, label: "Set Owner: ", label_method: :email %>
+    <%= f.association :user, label: "Set Owner: ", label_method: :email %>
   <% end %>
 
   <% if @dog.images.any? %>
