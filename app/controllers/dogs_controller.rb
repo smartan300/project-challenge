@@ -1,10 +1,21 @@
+
+
 class DogsController < ApplicationController
-  before_action :set_dog, only: [:show, :edit, :update, :destroy]
+    before_action :set_dog, only: [:show, :edit, :update, :destroy, :like]
 
   # GET /dogs
   # GET /dogs.json
   def index
-    @dogs = Dog.all
+      if params[:filter]
+          now =  Time.now
+          cutoff = now - 1.hour
+          
+          @dogs = Dog.all
+          @dogs = @dogs.sort_by { |dog| -dog.likes.where("created_at >= ?", cutoff).count }
+          @dogs = @dogs.paginate(page: params[:page], per_page:5)
+      else
+          @dogs = Dog.paginate(page: params[:page], per_page:5)
+      end
   end
 
   # GET /dogs/1
@@ -19,6 +30,9 @@ class DogsController < ApplicationController
 
   # GET /dogs/1/edit
   def edit
+      if @dog.user != nil && @dog.user != current_user
+          render file: "/public/401.html", status: :unauthorized
+      end
   end
 
   # POST /dogs
@@ -65,6 +79,11 @@ class DogsController < ApplicationController
     end
   end
 
+  def like
+      @dog.likes.create
+      redirect_back(fallback_location: root_path)
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dog
@@ -73,6 +92,6 @@ class DogsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def dog_params
-      params.require(:dog).permit(:name, :description, :images)
+        params.require(:dog).permit(:name, :description, :images, :user_id)
     end
 end

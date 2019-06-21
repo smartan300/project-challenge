@@ -4,3 +4,13 @@
     <%= image_tag url_for(dog.images.first), class: "dog-photo", alt: "Photo of #{dog.name}" %>
   </article>
 </a>
+<div style="overflow: auto;">
+    <% if current_user == nil %>
+        <div style = "display: inline-block">Please sign in to like dogs.</div>
+    <% elsif current_user == dog.user %>
+        <div style = "display: inline-block">This is your dog! We assume you like it :)</div>
+    <% else %>
+        <div style = "display: inline-block"><%= button_to "Like", like_path, params: {id: dog.id} %></div>
+    <% end %>
+    <div style = "display: inline-block"><%= dog.name %> has received <%= dog.likes.count %> like(s)!</div>
+</div>

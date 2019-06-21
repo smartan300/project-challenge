@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   devise_for :users
   resources :dogs
   root to: "dogs#index"
+  post '/like', to: "dogs#like"
 end

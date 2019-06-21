@@ -1,1 +1,12 @@
-<%= render partial: 'thumbnail', collection: @dogs, as: :dog %>
+<%= link_to "Sort By Likes In The Last Hour (Most Likes at Top)", root_path(filter: true) %>
+<br><br>
+
+<%= will_paginate @dogs %>
+
+<% @dogs.each_with_index do |dog, index| %>
+    <%= render partial: 'thumbnail', object: dog, as: :dog %>
+    <% if (index+1) % 2 == 0 %>
+        <div><%= image_tag "ad.jpg" %></div>
+    <% end %>
+<% end %>
+
